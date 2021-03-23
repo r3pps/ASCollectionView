@@ -12,17 +12,19 @@ public extension ASTableView
 	 - Parameters:
 	 - sections: An array of sections (ASTableViewSection)
 	 */
-	@inlinable init(style: UITableView.Style = .plain, editMode: Bool = false, sections: [Section])
+    @inlinable init(style: UITableView.Style = .plain, editMode: Bool = false, sections: [Section], refreshControlTintColor: UIColor? = nil)
 	{
 		self.style = style
 		self.editMode = editMode
 		self.sections = sections
+        self.refreshControlTintColor = refreshControlTintColor
 	}
 
-	@inlinable init(style: UITableView.Style = .plain, editMode: Bool = false, @SectionArrayBuilder <SectionID> sectionBuilder: () -> [Section])
+	@inlinable init(style: UITableView.Style = .plain, editMode: Bool = false, refreshControlTintColor: UIColor? = nil, @SectionArrayBuilder <SectionID> sectionBuilder: () -> [Section])
 	{
 		self.style = style
 		self.editMode = editMode
+        self.refreshControlTintColor = refreshControlTintColor
 		sections = sectionBuilder()
 	}
 }
@@ -36,10 +38,11 @@ public extension ASTableView where SectionID == Int
 	 - Parameters:
 	 - section: A single section (ASTableViewSection)
 	 */
-	init(style: UITableView.Style = .plain, editMode: Bool = false, section: Section)
+	init(style: UITableView.Style = .plain, editMode: Bool = false, refreshControlTintColor: UIColor? = nil, section: Section)
 	{
 		self.style = style
 		self.editMode = editMode
+        self.refreshControlTintColor = refreshControlTintColor
 		sections = [section]
 	}
 
@@ -49,6 +52,7 @@ public extension ASTableView where SectionID == Int
 	init<DataCollection: RandomAccessCollection, DataID: Hashable, Content: View>(
 		style: UITableView.Style = .plain,
 		editMode: Bool = false,
+        refreshControlTintColor: UIColor? = nil,
 		data: DataCollection,
 		dataID dataIDKeyPath: KeyPath<DataCollection.Element, DataID>,
 		@ViewBuilder contentBuilder: @escaping ((DataCollection.Element, ASCellContext) -> Content))
@@ -56,6 +60,7 @@ public extension ASTableView where SectionID == Int
 	{
 		self.style = style
 		self.editMode = editMode
+        self.refreshControlTintColor = refreshControlTintColor
 		let section = ASSection(
 			id: 0,
 			data: data,
@@ -70,11 +75,12 @@ public extension ASTableView where SectionID == Int
 	init<DataCollection: RandomAccessCollection, Content: View>(
 		style: UITableView.Style = .plain,
 		editMode: Bool = false,
+        refreshControlTintColor: UIColor? = nil,
 		data: DataCollection,
 		@ViewBuilder contentBuilder: @escaping ((DataCollection.Element, ASCellContext) -> Content))
 		where DataCollection.Index == Int, DataCollection.Element: Identifiable
 	{
-		self.init(style: style, editMode: editMode, data: data, dataID: \.id, contentBuilder: contentBuilder)
+        self.init(style: style, editMode: editMode, refreshControlTintColor: refreshControlTintColor, data: data, dataID: \.id, contentBuilder: contentBuilder)
 	}
 
 	/**

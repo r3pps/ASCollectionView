@@ -21,6 +21,7 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 	public var sections: [Section]
 	public var style: UITableView.Style
 	public var editMode: Bool = false
+    public var refreshControlTintColor: UIColor?
 
 	// MARK: Private vars set by public modifiers
 
@@ -372,6 +373,9 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 			if tv.refreshControl == nil
 			{
 				let refreshControl = UIRefreshControl()
+                if let tintColor = parent.refreshControlTintColor {
+                    refreshControl.tintColor = tintColor
+                }
 				refreshControl.addTarget(self, action: #selector(tableViewDidPullToRefresh), for: .valueChanged)
 				tv.refreshControl = refreshControl
 			}
