@@ -13,7 +13,7 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 
 	public typealias Section = ASTableViewSection<SectionID>
 
-	public typealias OnScrollCallback = ((_ contentOffset: CGPoint, _ contentSize: CGSize) -> Void)
+    public typealias OnScrollCallback = ((_ scrollView: UIScrollView, _ contentOffset: CGPoint, _ contentSize: CGSize) -> Void)
 	public typealias OnReachedBottomCallback = (() -> Void)
 
 	// MARK: Key variables
@@ -785,7 +785,7 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 
 		public func scrollViewDidScroll(_ scrollView: UIScrollView)
 		{
-			parent.onScrollCallback?(scrollView.contentOffset, scrollView.contentSizePlusInsets)
+			parent.onScrollCallback?(scrollView, scrollView.contentOffset, scrollView.contentSizePlusInsets)
 			checkIfReachedBottom(scrollView)
 		}
 
