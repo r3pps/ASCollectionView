@@ -361,6 +361,7 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 
 		func configureRefreshControl(for tv: UITableView)
 		{
+            tv.estimatedRowHeight = 200
 			guard parent.onPullToRefresh != nil
 			else
 			{

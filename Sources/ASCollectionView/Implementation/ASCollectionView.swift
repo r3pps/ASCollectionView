@@ -19,6 +19,7 @@ public struct ASCollectionView<SectionID: Hashable>: UIViewControllerRepresentab
 	public var layout: Layout = .default
 	public var sections: [Section]
 	public var editMode: Bool = false
+    public var refreshControlTintColor: UIColor? = UIColor.red
 
 	// MARK: Internal variables modified by modifier functions
 
@@ -475,6 +476,7 @@ public struct ASCollectionView<SectionID: Hashable>: UIViewControllerRepresentab
 			if cv.refreshControl == nil
 			{
 				let refreshControl = UIRefreshControl()
+                refreshControl.tintColor = parent.refreshControlTintColor
 				refreshControl.addTarget(self, action: #selector(collectionViewDidPullToRefresh), for: .valueChanged)
 				cv.refreshControl = refreshControl
 			}
