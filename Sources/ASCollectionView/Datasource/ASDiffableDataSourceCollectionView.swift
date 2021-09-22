@@ -10,20 +10,20 @@ class ASDiffableDataSourceCollectionView<SectionID: Hashable>: ASDiffableDataSou
 	/// The type of closure providing the cell.
 	public typealias Snapshot = ASDiffableDataSourceSnapshot<SectionID>
 	public typealias CellProvider = (UICollectionView, IndexPath, ASCollectionViewItemUniqueID) -> ASCollectionViewCell?
-	public typealias SupplementaryProvider = (UICollectionView, String, IndexPath) -> ASCollectionViewSupplementaryView?
+	public typealias SupplementaryProvider = (UICollectionView, String, IndexPath) -> ASCollectionViewSupplementaryView
 
 	private weak var collectionView: UICollectionView?
 	var cellProvider: CellProvider
-	var supplementaryViewProvider: SupplementaryProvider?
+	var supplementaryViewProvider: SupplementaryProvider
 
-	public init(collectionView: UICollectionView, cellProvider: @escaping CellProvider)
+	public init(collectionView: UICollectionView, cellProvider: @escaping CellProvider, supplementaryViewProvider: @escaping SupplementaryProvider)
 	{
 		self.collectionView = collectionView
 		self.cellProvider = cellProvider
+		self.supplementaryViewProvider = supplementaryViewProvider
 		super.init()
 
 		collectionView.dataSource = self
-		collectionView.register(ASCollectionViewSupplementaryView.self, forSupplementaryViewOfKind: supplementaryEmptyKind, withReuseIdentifier: supplementaryEmptyReuseID)
 	}
 
 	private var firstLoad: Bool = true
@@ -40,18 +40,15 @@ class ASDiffableDataSourceCollectionView<SectionID: Hashable>: ASDiffableDataSou
 				self.currentSnapshot = .init(sections: newSections)
 			}
 		}
-		CATransaction.begin()
-		CATransaction.setCompletionBlock(completion)
 		if firstLoad || !animated
 		{
-			CATransaction.setDisableActions(true)
-			apply()
+		        UIView.performWithoutAnimation(apply)
 		}
 		else
 		{
 			apply()
 		}
-		CATransaction.commit()
+                completion?()
 		firstLoad = false
 	}
 
@@ -76,18 +73,8 @@ class ASDiffableDataSourceCollectionView<SectionID: Hashable>: ASDiffableDataSou
 		return cell
 	}
 
-	private let supplementaryEmptyKind = UUID().uuidString // Used to prevent crash if supplementaries defined in layout but not provided by the section
-	private let supplementaryEmptyReuseID = UUID().uuidString
-
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
 	{
-		guard let cell = supplementaryViewProvider?(collectionView, kind, indexPath)
-		else
-		{
-			let empty = collectionView.dequeueReusableSupplementaryView(ofKind: supplementaryEmptyKind, withReuseIdentifier: supplementaryEmptyReuseID, for: indexPath)
-			(empty as? ASCollectionViewSupplementaryView)?.setAsEmpty(supplementaryID: ASSupplementaryCellID(sectionIDHash: 0, supplementaryKind: supplementaryEmptyKind))
-			return empty
-		}
-		return cell
+		return supplementaryViewProvider(collectionView, kind, indexPath)
 	}
 }

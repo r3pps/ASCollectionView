@@ -44,7 +44,7 @@ public func buildSectionArray<SectionID: Hashable>(@SectionArrayBuilder <Section
 }
 
 @available(iOS 13.0, *)
-@_functionBuilder
+@resultBuilder
 public struct SectionArrayBuilder<SectionID> where SectionID: Hashable
 {
 	public typealias Section = ASCollectionViewSection<SectionID>

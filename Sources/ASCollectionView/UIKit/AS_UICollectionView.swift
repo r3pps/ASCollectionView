@@ -49,9 +49,6 @@ public class AS_CollectionViewController: UIViewController
 		// Get current central cell
 		self.coordinator?.prepareForOrientationChange()
 
-		super.viewWillTransition(to: size, with: coordinator)
-		// The following is a workaround to fix the interface rotation animation under SwiftUI
-		view.frame = CGRect(origin: view.frame.origin, size: size)
 
 		coordinator.animate(alongsideTransition: { _ in
 			self.view.setNeedsLayout()
@@ -67,6 +64,8 @@ public class AS_CollectionViewController: UIViewController
 			// Completion
 			self.coordinator?.completedOrientationChange()
 		}
+		
+		super.viewWillTransition(to: size, with: coordinator)
 	}
 
 	override public func viewSafeAreaInsetsDidChange()

@@ -37,6 +37,10 @@ public struct ASCollectionView<SectionID: Hashable>: UIViewControllerRepresentab
 	internal var contentInsets: UIEdgeInsets = .zero
 
 	internal var onPullToRefresh: ((_ endRefreshing: @escaping (() -> Void)) -> Void)?
+    
+    internal var onWillDisplay: ((UICollectionViewCell, IndexPath) -> Void)?
+    
+    internal var onDidDisplay: ((UICollectionViewCell, IndexPath) -> Void)?
 
 	internal var alwaysBounceVertical: Bool = false
 	internal var alwaysBounceHorizontal: Bool = false
@@ -215,7 +219,7 @@ public struct ASCollectionView<SectionID: Hashable>: UIViewControllerRepresentab
 
 			cv.register(Cell.self, forCellWithReuseIdentifier: cellReuseID)
 
-			dataSource = .init(collectionView: cv)
+			dataSource = .init(collectionView: cv, cellProvider:
 			{ [weak self] collectionView, indexPath, itemID in
 				guard let self = self else { return nil }
 
@@ -250,32 +254,30 @@ public struct ASCollectionView<SectionID: Hashable>: UIViewControllerRepresentab
 				}
 
 				return cell
-			}
-			dataSource?.supplementaryViewProvider = { [weak self] cv, kind, indexPath in
-				guard let self = self else { return nil }
-
-				guard self.supplementaryKinds().contains(kind)
-				else
-				{
-					return nil
+			}, supplementaryViewProvider: { [weak self] cv, kind, indexPath in
+				guard let self = self else { fatalError("This shouldn't happen") }
+				if !self.supplementaryKinds().contains(kind) && !self.haveRegisteredForSupplementaryOfKind.contains(kind) {
+					cv.register(ASCollectionViewSupplementaryView.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: self.supplementaryReuseID)
+					self.haveRegisteredForSupplementaryOfKind.insert(kind)
+					print("ASCOLLECTIONVIEW WARNING: Your collection View layout requested supplementary of type: \(kind) and you have not provided any content, assuming empty view")
 				}
-				guard let reusableView = cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: self.supplementaryReuseID, for: indexPath) as? ASCollectionViewSupplementaryView
-				else { return nil }
-
-				guard let section = self.parent.sections[safe: indexPath.section] else { reusableView.setAsEmpty(supplementaryID: nil); return reusableView }
-				let supplementaryID = ASSupplementaryCellID(sectionIDHash: section.id.hashValue, supplementaryKind: kind)
-				reusableView.supplementaryID = supplementaryID
-
+				let reusableView = cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: self.supplementaryReuseID, for: indexPath) as! ASCollectionViewSupplementaryView //Force cast appropriate here
+				
+				guard let section = self.parent.sections[safe: indexPath.section] else { reusableView.setAsEmpty(supplementaryID: nil)
+					return reusableView
+				}
+				
 				// Self Sizing Settings
 				let selfSizingContext = ASSelfSizingContext(cellType: .supplementary(kind), indexPath: indexPath)
 				reusableView.selfSizingConfig =
 					section.dataSource.getSelfSizingSettings(context: selfSizingContext)
 						?? ASSelfSizingConfig()
 
+				let supplementaryID = ASSupplementaryCellID(sectionIDHash: section.id.hashValue, supplementaryKind: kind)
 				reusableView.setContent(supplementaryID: supplementaryID, content: section.dataSource.content(supplementaryID: supplementaryID))
 
 				return reusableView
-			}
+			})
 			setupPrefetching()
 		}
 
@@ -633,12 +635,14 @@ public struct ASCollectionView<SectionID: Hashable>: UIViewControllerRepresentab
 			currentlyPrefetching.remove(indexPath)
 			parent.sections[safe: indexPath.section]?.dataSource.onAppear(indexPath)
 			queuePrefetch.send()
+            parent.onWillDisplay?(cell, indexPath)
 		}
 
 		public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath)
 		{
 			guard !indexPath.isEmpty else { return }
 			parent.sections[safe: indexPath.section]?.dataSource.onDisappear(indexPath)
+            parent.onDidDisplay?(cell, indexPath)
 		}
 
 		public func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath)
@@ -753,7 +757,9 @@ public struct ASCollectionView<SectionID: Hashable>: UIViewControllerRepresentab
 		func canDrop(at indexPath: IndexPath) -> Bool
 		{
 			guard !indexPath.isEmpty else { return false }
-			return parent.sections[safe: indexPath.section]?.dataSource.dropEnabled ?? false
+
+			return (parent.sections[safe: indexPath.section]?.dataSource.dropEnabled ?? false)
+				&& (parent.sections[safe: indexPath.section]?.dataSource.canDropItem?(indexPath) ?? true)
 		}
 
 		func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem]

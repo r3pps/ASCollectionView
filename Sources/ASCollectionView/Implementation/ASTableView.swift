@@ -36,11 +36,17 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 	internal var separatorsEnabled: Bool = true
 
 	internal var onPullToRefresh: ((_ endRefreshing: @escaping (() -> Void)) -> Void)?
+    
+    internal var onWillDisplay: ((UITableViewCell, IndexPath) -> Void)?
+    
+    internal var onDidDisplay: ((UITableViewCell, IndexPath) -> Void)?
 
 	internal var alwaysBounce: Bool = false
 	internal var animateOnDataRefresh: Bool = true
 
 	internal var dodgeKeyboard: Bool = true
+
+	internal var shouldHandleKeyboardAppereance: Bool = true
 
 	// MARK: Environment variables
 
@@ -395,11 +401,14 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 		public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
 		{
 			parent.sections[safe: indexPath.section]?.dataSource.onAppear(indexPath)
-		}
+            parent.onWillDisplay?(cell,indexPath)
+        
+        }
 
 		public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath)
 		{
 			parent.sections[safe: indexPath.section]?.dataSource.onDisappear(indexPath)
+            parent.onDidDisplay?(cell,indexPath)
 		}
 
 		public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
@@ -821,6 +830,10 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 			}
 		}
 
+		var shouldHandleKeyboardAppereance: Bool {
+			parent.shouldHandleKeyboardAppereance
+		}
+
 		var extraKeyboardSpacing: CGFloat = 25
 		func setupKeyboardObservers()
 		{
@@ -864,6 +877,7 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 
 		@objc func keyBoardWillShow(notification: Notification)
 		{
+			guard shouldHandleKeyboardAppereance else { return }
 			guard containsFirstResponder()
 			else
 			{
@@ -890,6 +904,8 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 
 		@objc func keyBoardWillHide(notification _: Notification)
 		{
+			guard shouldHandleKeyboardAppereance else { return }
+
 			keyboardFrame = nil
 			tableViewController?.tableView.layoutIfNeeded()
 		}
