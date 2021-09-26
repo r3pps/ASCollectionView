@@ -178,6 +178,9 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 
 		func setupDataSource(forTableView tv: UITableView)
 		{
+            if #available(iOS 15, *) {
+                tv.sectionHeaderTopPadding = 0
+            }
 			tv.delegate = self
 			tv.prefetchDataSource = self
 

@@ -52,6 +52,40 @@ public extension ASSection
 			onSwipeToDelete: onSwipeToDelete,
 			contextMenuProvider: contextMenuProvider)
 	}
+    
+    internal init<T, DataID: Hashable, Content: View, Container: View>(
+        id: SectionID,
+        data: Binding<T>,
+        dataID dataIDKeyPath: KeyPath<T.Element, DataID>,
+        container: @escaping ((Content, ASCellContext) -> Container),
+        selectionMode: ASSectionSelectionMode = .none,
+        shouldAllowHighlight: ((_ index: Int) -> Bool)? = nil,
+        shouldAllowSelection: ((_ index: Int) -> Bool)? = nil,
+        shouldAllowDeselection: ((_ index: Int) -> Bool)? = nil,
+        onCellEvent: OnCellEvent<T.Element>? = nil,
+        dragDropConfig: ASDragDropConfig<T.Element> = .disabled,
+        shouldAllowSwipeToDelete: ShouldAllowSwipeToDelete? = nil,
+        onSwipeToDelete: OnSwipeToDelete<T.Element>? = nil,
+        contextMenuProvider: ContextMenuProvider<T.Element>? = nil,
+        @ViewBuilder contentBuilder: @escaping ((Binding<T.Element>, ASCellContext) -> Content))
+        where T: MutableCollection & RandomAccessCollection, T.Element: Identifiable, T.Index == Int
+    {
+        self.id = id
+        dataSource = ASSectionBindingDataSource<T, DataID, Content, Container>(
+            data: data,
+            dataIDKeyPath: dataIDKeyPath,
+            container: container,
+            content: contentBuilder,
+            selectionMode: selectionMode,
+            shouldAllowHighlight: shouldAllowHighlight,
+            shouldAllowSelection: shouldAllowSelection,
+            shouldAllowDeselection: shouldAllowDeselection,
+            onCellEvent: onCellEvent,
+            dragDropConfig: dragDropConfig,
+            shouldAllowSwipeToDelete: shouldAllowSwipeToDelete,
+            onSwipeToDelete: onSwipeToDelete,
+            contextMenuProvider: contextMenuProvider)
+    }
 
 	init<DataCollection: RandomAccessCollection, DataID: Hashable, Content: View>(
 		id: SectionID,
@@ -71,6 +105,25 @@ public extension ASSection
 	{
 		self.init(id: id, data: data, dataID: dataIDKeyPath, container: { content, _ in content }, selectionMode: selectionMode, shouldAllowHighlight: shouldAllowHighlight, shouldAllowSelection: shouldAllowSelection, shouldAllowDeselection: shouldAllowDeselection, onCellEvent: onCellEvent, dragDropConfig: dragDropConfig, shouldAllowSwipeToDelete: shouldAllowSwipeToDelete, onSwipeToDelete: onSwipeToDelete, contextMenuProvider: contextMenuProvider, contentBuilder: contentBuilder)
 	}
+    
+    init<T: MutableCollection & RandomAccessCollection, DataID: Hashable, Content: View>(
+        id: SectionID,
+        data: Binding<T>,
+        dataID dataIDKeyPath: KeyPath<T.Element, DataID>,
+        selectionMode: ASSectionSelectionMode = .none,
+        shouldAllowHighlight: ((_ index: Int) -> Bool)? = nil,
+        shouldAllowSelection: ((_ index: Int) -> Bool)? = nil,
+        shouldAllowDeselection: ((_ index: Int) -> Bool)? = nil,
+        onCellEvent: OnCellEvent<T.Element>? = nil,
+        dragDropConfig: ASDragDropConfig<T.Element> = .disabled,
+        shouldAllowSwipeToDelete: ShouldAllowSwipeToDelete? = nil,
+        onSwipeToDelete: OnSwipeToDelete<T.Element>? = nil,
+        contextMenuProvider: ContextMenuProvider<T.Element>? = nil,
+        @ViewBuilder contentBuilder: @escaping ((Binding<T.Element>, ASCellContext) -> Content))
+    where T.Element: Identifiable, T.Index == Int
+    {
+        self.init(id: id, data: data, dataID: dataIDKeyPath, container: { content, _ in content }, selectionMode: selectionMode, shouldAllowHighlight: shouldAllowHighlight, shouldAllowSelection: shouldAllowSelection, shouldAllowDeselection: shouldAllowDeselection, onCellEvent: onCellEvent, dragDropConfig: dragDropConfig, shouldAllowSwipeToDelete: shouldAllowSwipeToDelete, onSwipeToDelete: onSwipeToDelete, contextMenuProvider: contextMenuProvider, contentBuilder: contentBuilder)
+    }
 }
 
 // MARK: IDENTIFIABLE DATA SECTION
