@@ -236,16 +236,10 @@ private class AS_UIHostingController<Content: View>: UIHostingController<Content
 	}
     
     override func viewWillAppear(_ animated: Bool) {
-        // There is a bug in iOS 15 which will override the state of the navigationController when viewWillAppear is called
-        // Here we preserve the before state and set it after calling super.viewWillAppear
-        if #available(iOS 15, *) {
-            let beforeState = navigationController?.isNavigationBarHidden
-            super.viewWillAppear(animated)
-            if let beforeState = beforeState {
-                navigationController?.isNavigationBarHidden = beforeState
-            }
-        } else {
-            super.viewWillAppear(animated)
+        let beforeState = navigationController?.isNavigationBarHidden
+        super.viewWillAppear(animated)
+        if let beforeState = beforeState {
+            navigationController?.isNavigationBarHidden = beforeState
         }
     }
 
