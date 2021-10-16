@@ -276,10 +276,21 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 		func refreshVisibleCells(transaction: Transaction?, updateAll: Bool = true)
 		{
 			guard let tv = tableViewController?.tableView else { return }
+            var indexPaths: [IndexPath] = []
 			for cell in tv.visibleCells
 			{
 				refreshCell(cell)
+                if let indexPath = tv.indexPath(for: cell) {
+                    indexPaths.append(indexPath)
+                }
 			}
+
+            // Hack right now to reload the table view rows that have changed.
+            if transaction?.animation != nil {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    tv.reloadRows(at: indexPaths, with: .none)
+                }
+            }
 
 			for case let supplementaryView as ASTableViewSupplementaryView in tv.subviews
 			{
