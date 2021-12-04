@@ -68,7 +68,7 @@ public extension ASSection
         onSwipeToDelete: OnSwipeToDelete<T.Element>? = nil,
         contextMenuProvider: ContextMenuProvider<T.Element>? = nil,
         @ViewBuilder contentBuilder: @escaping ((Binding<T.Element>, ASCellContext) -> Content))
-        where T: MutableCollection & RandomAccessCollection, T.Element: Identifiable, T.Index == Int
+        where T: MutableCollection & RandomAccessCollection, T.Element: Identifiable & ComputableHeight, T.Index == Int
     {
         self.id = id
         dataSource = ASSectionBindingDataSource<T, DataID, Content, Container>(
@@ -120,7 +120,7 @@ public extension ASSection
         onSwipeToDelete: OnSwipeToDelete<T.Element>? = nil,
         contextMenuProvider: ContextMenuProvider<T.Element>? = nil,
         @ViewBuilder contentBuilder: @escaping ((Binding<T.Element>, ASCellContext) -> Content))
-    where T.Element: Identifiable, T.Index == Int
+    where T.Element: Identifiable & ComputableHeight, T.Index == Int
     {
         self.init(id: id, data: data, dataID: dataIDKeyPath, container: { content, _ in content }, selectionMode: selectionMode, shouldAllowHighlight: shouldAllowHighlight, shouldAllowSelection: shouldAllowSelection, shouldAllowDeselection: shouldAllowDeselection, onCellEvent: onCellEvent, dragDropConfig: dragDropConfig, shouldAllowSwipeToDelete: shouldAllowSwipeToDelete, onSwipeToDelete: onSwipeToDelete, contextMenuProvider: contextMenuProvider, contentBuilder: contentBuilder)
     }

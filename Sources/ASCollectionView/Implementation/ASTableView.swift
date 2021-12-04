@@ -122,6 +122,7 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 		private var hasDoneInitialSetup = false
 		private var shouldAnimateScrollPositionSet = false
 		private var selectedIndexPaths: Set<IndexPath> = []
+        private let cache = NSCache<StructWrapper<IndexPath>, StructWrapper<CGFloat>>()
 
 		typealias Cell = ASTableViewCell
 
@@ -137,6 +138,15 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 			else { return nil }
 			return parent.sections[safe: indexPath.section]?.dataSource.getItemID(for: indexPath.item, withSectionID: sectionID)
 		}
+        
+        public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            if let cachedHeight = cache.object(forKey: StructWrapper(indexPath)) {
+                return cachedHeight.value
+            } else if let height = parent.sections[safe: indexPath.section]?.dataSource.getHeightForItem(indexPath) {
+                cache.setObject(StructWrapper(height), forKey: StructWrapper(indexPath))
+                return height
+            }
+        }
 
 		func sectionID(fromSectionIndex sectionIndex: Int) -> SectionID?
 		{
@@ -371,7 +381,6 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
 
 		func configureRefreshControl(for tv: UITableView)
 		{
-            tv.estimatedRowHeight = 200
 			guard parent.onPullToRefresh != nil
 			else
 			{
@@ -930,4 +939,13 @@ public enum ASTableViewScrollPosition: Equatable
 	case top
 	case bottom
 	case indexPath(_: IndexPath)
+}
+
+public class StructWrapper<T>: NSObject {
+
+    let value: T
+
+    init(_ _struct: T) {
+        self.value = _struct
+    }
 }

@@ -47,8 +47,19 @@ internal protocol ASSectionDataSourceProtocol
 	var dropEnabled: Bool { get }
 	var canDropItem: ((IndexPath) -> Bool)? { get }
 	var reorderingEnabled: Bool { get }
+    func getHeightForItem(_ indexPath: IndexPath) -> CGFloat?
 
 	mutating func setSelfSizingConfig(config: @escaping SelfSizingConfig)
+}
+
+public protocol ComputableHeight {
+    func getHeight() -> CGFloat
+}
+
+public extension ComputableHeight {
+    func getHeight() -> CGFloat {
+        return UITableView.automaticDimension
+    }
 }
 
 @available(iOS 13.0, *)
@@ -427,10 +438,14 @@ internal struct ASSectionDataSource<DataCollection: RandomAccessCollection, Data
 			self.selectedIndicesBinding?.wrappedValue = indices
 		}
 	}
+    
+    func getHeightForItem(_ indexPath: IndexPath) -> CGFloat? {
+        return UITableView.automaticDimension
+    }
 }
 
 @available(iOS 13.0, *)
-internal struct ASSectionBindingDataSource<T: MutableCollection & RandomAccessCollection, DataID, Content, Container>: ASSectionDataSourceProtocol where DataID: Hashable, Content: View, Container: View, T.Index == Int, T.Element: Identifiable
+internal struct ASSectionBindingDataSource<T: MutableCollection & RandomAccessCollection, DataID, Content, Container>: ASSectionDataSourceProtocol where DataID: Hashable, Content: View, Container: View, T.Index == Int, T.Element: Identifiable & ComputableHeight
 {
 
     typealias DataCollection = Binding<T>
@@ -583,6 +598,10 @@ internal struct ASSectionBindingDataSource<T: MutableCollection & RandomAccessCo
         let dragItem = UIDragItem(itemProvider: itemProvider)
         dragItem.localObject = item
         return dragItem
+    }
+    
+    func getHeightForItem(_ indexPath: IndexPath) -> CGFloat? {
+        return data.wrappedValue[safe: indexPath.item]?.getHeight()
     }
 
     func willAcceptDropItem(from dragItem: UIDragItem) -> Bool

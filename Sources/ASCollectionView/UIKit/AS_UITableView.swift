@@ -68,4 +68,10 @@ class AS_UITableView: UITableView
 			coordinator?.onMoveFromParent()
 		}
 	}
+    
+    override func layoutSubviews() {
+        DispatchQueue.main.async {
+            super.layoutSubviews()
+        }
+    }
 }
