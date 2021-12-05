@@ -146,6 +146,7 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
                 cache.setObject(StructWrapper(height), forKey: StructWrapper(indexPath))
                 return height
             }
+            return UITableView.automaticDimension
         }
 
 		func sectionID(fromSectionIndex sectionIndex: Int) -> SectionID?
