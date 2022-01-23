@@ -56,7 +56,7 @@ class ASDiffableDataSourceTableView<SectionID: Hashable>: ASDiffableDataSource<S
         var changeset = StagedChangeset(source: currentSnapshot.sections, target: newSnapshot.sections)
         let shouldDisableAnimation = firstLoad || !animated
                 
-        if changeset.count > 0 {
+        if !changeset.isEmpty && changeset.contains(where: { !$0.elementDeleted.isEmpty }) {
             let min = min(newSnapshot.sections[0].elements.count, 5)
             var elementPaths: [ElementPath] = []
             for i in 0..<min {
