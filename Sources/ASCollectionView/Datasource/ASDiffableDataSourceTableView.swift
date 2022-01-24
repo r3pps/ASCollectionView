@@ -53,18 +53,9 @@ class ASDiffableDataSourceTableView<SectionID: Hashable>: ASDiffableDataSource<S
 
         firstLoad = false
         
-        var changeset = StagedChangeset(source: currentSnapshot.sections, target: newSnapshot.sections)
+        let changeset = StagedChangeset(source: currentSnapshot.sections, target: newSnapshot.sections)
         let shouldDisableAnimation = firstLoad || !animated
-                
-        if !changeset.isEmpty && changeset.contains(where: { !$0.elementDeleted.isEmpty }) {
-            let min = min(newSnapshot.sections[0].elements.count, 5)
-            var elementPaths: [ElementPath] = []
-            for i in 0..<min {
-                elementPaths.append(ElementPath(element: i, section: 0))
-            }
-            let set = Changeset.init(data: newSnapshot.sections, elementUpdated: elementPaths)
-            changeset.append(set)
-        }
+        
         canRefreshSizes = false
         CATransaction.begin()
         if shouldDisableAnimation
