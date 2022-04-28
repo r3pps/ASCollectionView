@@ -15,6 +15,23 @@ public extension ASTableView
 		this.onScrollCallback = onScroll
 		return this
 	}
+    
+    /// Set a closure that is called whenever the tableView is scrolled begin
+    func onScrollBegin(_ onScrollBegin: @escaping OnScrollCallback) -> Self
+    {
+        var this = self
+        this.onScrollBeginCallback = onScrollBegin
+        return this
+    }
+    
+    /// Set a closure that is called whenever the tableView is scrolled end
+    func onScrollEnd(_ onScrollEnd: @escaping OnScrollCallback) -> Self
+    {
+        var this = self
+        this.onScrollEndCallback = onScrollEnd
+        return this
+    }
+
 
 	/// Set a closure that is called whenever the tableView is scrolled to the bottom.
 	/// This is useful to enable loading more data when scrolling to bottom
