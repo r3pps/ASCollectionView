@@ -830,7 +830,7 @@ public struct ASTableView<SectionID: Hashable>: UIViewControllerRepresentable, C
         }
         
         public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-            onScrollEnd(scrollView, scrollView.contentOffset, scrollView.contentSizePlusInsets)
+            //onScrollEnd(scrollView, scrollView.contentOffset, scrollView.contentSizePlusInsets)
         }
         
         public func onScrollEnd(_ scrollView: UIScrollView, _ contentOffset: CGPoint, _ contentSize: CGSize) {
