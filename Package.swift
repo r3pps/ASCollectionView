@@ -16,6 +16,6 @@ let package = Package(name: "ASCollectionView",
                       ],
                       targets: [
                       	.target(name: "ASCollectionView",
-                      	        dependencies: ["DifferenceKit"]),
+                      	        dependencies: ["DifferenceKit", "TextureSwiftSupport"]),
 					  ]
 )
