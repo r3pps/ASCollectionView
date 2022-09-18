@@ -70,12 +70,12 @@ class AS_UITableView: UITableView
 	}
     
     override func layoutSubviews() {
-        if #available(iOS 15, *) {
-            DispatchQueue.main.async {
-                super.layoutSubviews()
-            }
-        } else {
+//        if #available(iOS 15, *) {
+//            DispatchQueue.main.async {
+//                super.layoutSubviews()
+//            }
+//        } else {
             super.layoutSubviews()
-        }
+        //}
     }
 }

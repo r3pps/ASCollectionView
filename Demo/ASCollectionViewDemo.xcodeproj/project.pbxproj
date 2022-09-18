@@ -314,6 +314,7 @@
 			mainGroup = B86C6F0A234B078600522AEF;
 			packageReferences = (
 				B8A95E3A2360800D0017A7EA /* XCRemoteSwiftPackageReference "MagazineLayout" */,
+				6808217228D6DFA4000268FB /* XCRemoteSwiftPackageReference "TextureSwiftSupport" */,
 			);
 			productRefGroup = B86C6F14234B078600522AEF /* Products */;
 			projectDirPath = "";
@@ -593,6 +594,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6808217228D6DFA4000268FB /* XCRemoteSwiftPackageReference "TextureSwiftSupport" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FluidGroup/TextureSwiftSupport.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		B8A95E3A2360800D0017A7EA /* XCRemoteSwiftPackageReference "MagazineLayout" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/MagazineLayout";

@@ -1,25 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "DifferenceKit",
-        "repositoryURL": "https://github.com/ra1028/DifferenceKit",
-        "state": {
-          "branch": null,
-          "revision": "14c66681e12a38b81045f44c6c29724a0d4b0e72",
-          "version": "1.1.5"
-        }
-      },
-      {
-        "package": "MagazineLayout",
-        "repositoryURL": "https://github.com/airbnb/MagazineLayout",
-        "state": {
-          "branch": "master",
-          "revision": "4a5eff2203ad8d8c7e14ea1b283b64f9320752a9",
-          "version": null
-        }
+  "pins" : [
+    {
+      "identity" : "magazinelayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/MagazineLayout",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4a5eff2203ad8d8c7e14ea1b283b64f9320752a9"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }
