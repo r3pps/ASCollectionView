@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -12,6 +12,7 @@ let package = Package(name: "ASCollectionView",
 					  ],
                       dependencies: [
 						.package(url: "https://github.com/ra1028/DifferenceKit", .upToNextMajor(from: Version(1, 1, 5)))
+			      			.package(url: "https://github.com/FluidGroup/TextureSwiftSupport", branch: "main")
                       ],
                       targets: [
                       	.target(name: "ASCollectionView",
