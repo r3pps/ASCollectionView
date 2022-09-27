@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ASDKCollectionView'
-  s.version          = '1.0.0'
+  s.version          = '3.0.0'
   s.summary          = 'A SwiftUI collection view with support for custom layouts, preloading, and more. '
 
   s.description      = <<-DESC

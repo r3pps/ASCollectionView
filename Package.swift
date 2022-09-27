@@ -12,7 +12,7 @@ let package = Package(name: "ASCollectionView",
 					  ],
                       dependencies: [
 						.package(url: "https://github.com/ra1028/DifferenceKit", .upToNextMajor(from: Version(1, 1, 5))),
-                        .package(url: "https://github.com/r3pps/Texture.git", from: .init(3, 1, 4)),
+                        .package(url: "https://github.com/shimastripe/Texture.git", from: .init(3, 1, 1)),
                       ],
                       targets: [
                       	.target(name: "ASCollectionView",
