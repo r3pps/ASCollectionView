@@ -49,6 +49,64 @@ public struct ASSection<SectionID: Hashable>
 	var estimatedFooterHeight: CGFloat?
 }
 
+@available(iOS 13.0, *)
+public struct ASDKSection<SectionID: Hashable>
+{
+    public var id: SectionID
+
+    internal var dataSource: ASDKSectionDataSourceProtocol
+
+    public var itemIDs: [ASCollectionViewItemUniqueID]
+    {
+        dataSource.getUniqueItemIDs(withSectionID: id)
+    }
+
+    var shouldCacheCells: Bool = false
+
+    // Only relevant for ASTableView
+    var sectionIndexTitle: String?
+    var disableDefaultTheming: Bool = false
+    var tableViewSeparatorInsets: UIEdgeInsets?
+    var estimatedHeaderHeight: CGFloat?
+    var estimatedFooterHeight: CGFloat?
+}
+
+@available(iOS 13.0, *)
+internal extension ASDKSection
+{
+    mutating func setHeaderView<Content: View>(_ view: Content?)
+    {
+        setSupplementaryView(view, ofKind: UICollectionView.elementKindSectionHeader)
+    }
+
+    mutating func setFooterView<Content: View>(_ view: Content?)
+    {
+        setSupplementaryView(view, ofKind: UICollectionView.elementKindSectionFooter)
+    }
+
+    mutating func setSupplementaryView<Content: View>(_ view: Content?, ofKind kind: String)
+    {
+        guard let view = view
+        else
+        {
+            dataSource.supplementaryViews.removeValue(forKey: kind)
+            return
+        }
+
+        dataSource.supplementaryViews[kind] = AnyView(view)
+    }
+
+    var supplementaryKinds: Set<String>
+    {
+        Set(dataSource.supplementaryViews.keys)
+    }
+
+    func supplementary(ofKind kind: String) -> AnyView?
+    {
+        dataSource.supplementaryViews[kind]
+    }
+}
+
 // MARK: SUPPLEMENTARY VIEWS - INTERNAL
 
 @available(iOS 13.0, *)

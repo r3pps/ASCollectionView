@@ -2,6 +2,7 @@
 
 import Foundation
 import SwiftUI
+import AsyncDisplayKit
 
 // MARK: DYNAMIC CONTENT SECTION
 
@@ -121,6 +122,63 @@ public extension ASSection
         contextMenuProvider: ContextMenuProvider<T.Element>? = nil,
         @ViewBuilder contentBuilder: @escaping ((Binding<T.Element>, ASCellContext) -> Content))
     where T.Element: Identifiable & ComputableHeight, T.Index == Int
+    {
+        self.init(id: id, data: data, dataID: dataIDKeyPath, container: { content, _ in content }, selectionMode: selectionMode, shouldAllowHighlight: shouldAllowHighlight, shouldAllowSelection: shouldAllowSelection, shouldAllowDeselection: shouldAllowDeselection, onCellEvent: onCellEvent, dragDropConfig: dragDropConfig, shouldAllowSwipeToDelete: shouldAllowSwipeToDelete, onSwipeToDelete: onSwipeToDelete, contextMenuProvider: contextMenuProvider, contentBuilder: contentBuilder)
+    }
+}
+
+@available(iOS 13.0, *)
+public extension ASDKSection
+{
+    init<DataCollection: RandomAccessCollection, DataID: Hashable, Content: ASCellNode, Container: ASCellNode>(
+        id: SectionID,
+        data: DataCollection,
+        dataID dataIDKeyPath: KeyPath<DataCollection.Element, DataID>,
+        container: @escaping ((Content, ASCellContext) -> Container),
+        selectionMode: ASSectionSelectionMode = .none,
+        shouldAllowHighlight: ((_ index: Int) -> Bool)? = nil,
+        shouldAllowSelection: ((_ index: Int) -> Bool)? = nil,
+        shouldAllowDeselection: ((_ index: Int) -> Bool)? = nil,
+        onCellEvent: OnCellEvent<DataCollection.Element>? = nil,
+        dragDropConfig: ASDragDropConfig<DataCollection.Element> = .disabled,
+        shouldAllowSwipeToDelete: ShouldAllowSwipeToDelete? = nil,
+        onSwipeToDelete: OnSwipeToDelete<DataCollection.Element>? = nil,
+        contextMenuProvider: ContextMenuProvider<DataCollection.Element>? = nil,
+        contentBuilder: @escaping ((DataCollection.Element, ASCellContext) -> Content))
+        where DataCollection.Index == Int
+    {
+        self.id = id
+        dataSource = ASDKSectionDataSource<DataCollection, DataID, Content, Container>(
+            data: data,
+            dataIDKeyPath: dataIDKeyPath,
+            container: container,
+            content: contentBuilder,
+            selectionMode: selectionMode,
+            shouldAllowHighlight: shouldAllowHighlight,
+            shouldAllowSelection: shouldAllowSelection,
+            shouldAllowDeselection: shouldAllowDeselection,
+            onCellEvent: onCellEvent,
+            dragDropConfig: dragDropConfig,
+            shouldAllowSwipeToDelete: shouldAllowSwipeToDelete,
+            onSwipeToDelete: onSwipeToDelete,
+            contextMenuProvider: contextMenuProvider)
+    }
+
+    init<DataCollection: RandomAccessCollection, DataID: Hashable, Content: ASCellNode>(
+        id: SectionID,
+        data: DataCollection,
+        dataID dataIDKeyPath: KeyPath<DataCollection.Element, DataID>,
+        selectionMode: ASSectionSelectionMode = .none,
+        shouldAllowHighlight: ((_ index: Int) -> Bool)? = nil,
+        shouldAllowSelection: ((_ index: Int) -> Bool)? = nil,
+        shouldAllowDeselection: ((_ index: Int) -> Bool)? = nil,
+        onCellEvent: OnCellEvent<DataCollection.Element>? = nil,
+        dragDropConfig: ASDragDropConfig<DataCollection.Element> = .disabled,
+        shouldAllowSwipeToDelete: ShouldAllowSwipeToDelete? = nil,
+        onSwipeToDelete: OnSwipeToDelete<DataCollection.Element>? = nil,
+        contextMenuProvider: ContextMenuProvider<DataCollection.Element>? = nil,
+        contentBuilder: @escaping ((DataCollection.Element, ASCellContext) -> Content))
+        where DataCollection.Index == Int
     {
         self.init(id: id, data: data, dataID: dataIDKeyPath, container: { content, _ in content }, selectionMode: selectionMode, shouldAllowHighlight: shouldAllowHighlight, shouldAllowSelection: shouldAllowSelection, shouldAllowDeselection: shouldAllowDeselection, onCellEvent: onCellEvent, dragDropConfig: dragDropConfig, shouldAllowSwipeToDelete: shouldAllowSwipeToDelete, onSwipeToDelete: onSwipeToDelete, contextMenuProvider: contextMenuProvider, contentBuilder: contentBuilder)
     }

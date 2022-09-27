@@ -2,6 +2,7 @@
 
 import Foundation
 import SwiftUI
+import AsyncDisplayKit
 
 // MARK: PUBLIC Modifier: OnScroll / OnReachedBottom
 
@@ -67,7 +68,7 @@ public extension ASDKTableView
     }
     
     /// Set a closure that is called when the collectionView will display a cell
-    func onWillDisplay(_ callback: ((UITableViewCell, IndexPath)->Void)?) -> Self
+    func onWillDisplay(_ callback: ((ASCellNode, IndexPath)->Void)?) -> Self
     {
         var this = self
         this.onWillDisplay = callback
@@ -75,7 +76,7 @@ public extension ASDKTableView
     }
     
     /// Set a closure that is called when the collectionView did display a cell
-    func onDidDisplay(_ callback: ((UITableViewCell, IndexPath)->Void)?) -> Self
+    func onDidDisplay(_ callback: ((ASCellNode, IndexPath)->Void)?) -> Self
     {
         var this = self
         this.onDidDisplay = callback
