@@ -1,16 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "DifferenceKit",
-        "repositoryURL": "https://github.com/ra1028/DifferenceKit",
-        "state": {
-          "branch": null,
-          "revision": "14c66681e12a38b81045f44c6c29724a0d4b0e72",
-          "version": "1.1.5"
-        }
+  "pins" : [
+    {
+      "identity" : "differencekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ra1028/DifferenceKit",
+      "state" : {
+        "revision" : "14c66681e12a38b81045f44c6c29724a0d4b0e72",
+        "version" : "1.1.5"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "texture",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/shimastripe/Texture.git",
+      "state" : {
+        "revision" : "ef22942d014ed0f7d0cca9d708e335e06fb1dddb",
+        "version" : "3.1.1"
+      }
+    }
+  ],
+  "version" : 2
 }

@@ -121,13 +121,13 @@ class AS_UITableView: UITableView
 	}
     
     override func layoutSubviews() {
-//        if #available(iOS 15, *) {
-//            DispatchQueue.main.async {
-//                super.layoutSubviews()
-//            }
-//        } else {
+        if #available(iOS 15, *) {
+            DispatchQueue.main.async {
+                super.layoutSubviews()
+            }
+        } else {
             super.layoutSubviews()
-        //}
+        }
     }
 }
 
@@ -145,15 +145,6 @@ class ASDK_UITableView: ASTableNode
         coordinator?.onMoveToParent()
     }
     
-//    override func layoutSubviews() {
-////        if #available(iOS 15, *) {
-////            DispatchQueue.main.async {
-////                super.layoutSubviews()
-////            }
-////        } else {
-//            super.layoutSubviews()
-//        //}
-//    }
 }
 
 extension AsyncDisplayKit.ASTableView {
