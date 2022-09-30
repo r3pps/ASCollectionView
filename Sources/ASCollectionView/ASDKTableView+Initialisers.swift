@@ -21,7 +21,7 @@ public extension ASDKTableView
         self.refreshControlTintColor = refreshControlTintColor
     }
 
-    @inlinable init(style: UITableView.Style = .plain, editMode: Bool = false, refreshControlTintColor: UIColor? = nil, @SectionArrayBuilder <SectionID> sectionBuilder: () -> [Section])
+    @inlinable init(style: UITableView.Style = .plain, editMode: Bool = false, refreshControlTintColor: UIColor? = nil, @ASDKSectionArrayBuilder <SectionID> sectionBuilder: () -> [Section])
     {
         self.style = style
         self.editMode = editMode

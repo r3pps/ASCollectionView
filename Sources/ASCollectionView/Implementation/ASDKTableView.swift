@@ -403,18 +403,6 @@ public struct ASDKTableView<SectionID: Hashable>: UIViewControllerRepresentable,
             parent.onDidDisplay?(cell,indexPath)
         }
 
-        public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
-        {}
-
-        public func tableView(_ tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int)
-        {}
-
-        public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int)
-        {}
-
-        public func tableView(_ tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int)
-        {}
-
         public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath])
         {
             let itemIDsToPrefetchBySection: [Int: [IndexPath]] = Dictionary(grouping: indexPaths) { $0.section }

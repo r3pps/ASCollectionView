@@ -20,6 +20,15 @@ extension ASSection: Nestable
 }
 
 @available(iOS 13.0, *)
+extension ASDKSection: Nestable
+{
+    public func asArray() -> [ASDKSection]
+    {
+        [self]
+    }
+}
+
+@available(iOS 13.0, *)
 extension Optional: Nestable where Wrapped: Nestable
 {
 	public func asArray() -> [Wrapped.T]
@@ -84,4 +93,47 @@ public struct SectionArrayBuilder<SectionID> where SectionID: Hashable
 	{
 		items.flatMap { $0 }
 	}
+}
+
+@available(iOS 13.0, *)
+@resultBuilder
+public struct ASDKSectionArrayBuilder<SectionID> where SectionID: Hashable
+{
+    public typealias Section = ASDKCollectionViewSection<SectionID>
+    public typealias Output = [Section]
+
+    public static func buildExpression(_ section: ASDKSection<SectionID>?) -> Output
+    {
+        section?.asArray() ?? []
+    }
+
+    public static func buildExpression(_ sections: [ASDKSection<SectionID>]) -> Output
+    {
+        sections
+    }
+
+    public static func buildEither(first: Output) -> Output
+    {
+        first.asArray()
+    }
+
+    public static func buildEither(second: Output) -> Output
+    {
+        second.asArray()
+    }
+
+    public static func buildIf(_ item: Output?) -> Output
+    {
+        item?.asArray() ?? []
+    }
+
+    public static func buildBlock(_ item0: Output) -> Output
+    {
+        item0.asArray()
+    }
+
+    public static func buildBlock(_ items: Output...) -> Output
+    {
+        items.flatMap { $0 }
+    }
 }

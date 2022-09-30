@@ -27,6 +27,9 @@ public struct ASCollectionViewItemUniqueID: Hashable
 @available(iOS 13.0, *)
 public typealias ASCollectionViewSection = ASSection
 
+@available(iOS 13, *)
+public typealias ASDKCollectionViewSection = ASDKSection
+
 @available(iOS 13.0, *)
 public struct ASSection<SectionID: Hashable>
 {
