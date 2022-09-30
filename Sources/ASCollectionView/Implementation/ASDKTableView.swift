@@ -192,6 +192,8 @@ public struct ASDKTableView<SectionID: Hashable>: UIViewControllerRepresentable,
             tv.view.dragDelegate = self
             tv.view.dropDelegate = self
             tv.view.dragInteractionEnabled = true
+            
+            tv.view.register(ASTableViewSupplementaryView.self, forHeaderFooterViewReuseIdentifier: supplementaryReuseID)
 
             dataSource = .init(tableView: tv)
             { [weak self] tableView, indexPath, itemID in
@@ -265,14 +267,14 @@ public struct ASDKTableView<SectionID: Hashable>: UIViewControllerRepresentable,
                 refreshCell(cell)
             }
 
-//            for case let supplementaryView as ASTableViewSupplementaryView in tv.subviews
-//            {
-//                guard
-//                    let supplementaryID = supplementaryView.supplementaryID,
-//                    let section = parent.sections.first(where: { $0.id.hashValue == supplementaryID.sectionIDHash })
-//                else { continue }
-//                supplementaryView.setContent(supplementaryID: supplementaryID, content: section.dataSource.content(supplementaryID: supplementaryID))
-//            }
+            for case let supplementaryView as ASTableViewSupplementaryView in tv.view.subviews
+            {
+                guard
+                    let supplementaryID = supplementaryView.supplementaryID,
+                    let section = parent.sections.first(where: { $0.id.hashValue == supplementaryID.sectionIDHash })
+                else { continue }
+                supplementaryView.setContent(supplementaryID: supplementaryID, content: section.dataSource.content(supplementaryID: supplementaryID))
+            }
         }
 
         func refreshCell(_ cell: ASCellNode, forceUpdate: Bool = false)

@@ -76,6 +76,7 @@ public class ASDK_TableViewController: ASDKViewController<ASTableNode>
         self.tableView = tableNode
         super.init(node: tableNode)
         
+        tableView.view.estimatedSectionHeaderHeight = UITableView.automaticDimension
         self.tableView.coordinator = coordinator
         tableView.view.tableHeaderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: CGFloat.leastNormalMagnitude, height: CGFloat.leastNormalMagnitude))) // Remove unnecessary padding in Style.grouped/insetGrouped
         tableView.view.tableFooterView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: CGFloat.leastNormalMagnitude, height: CGFloat.leastNormalMagnitude))) // Remove separators for non-existent cells
