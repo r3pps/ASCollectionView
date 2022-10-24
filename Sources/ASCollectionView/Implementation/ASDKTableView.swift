@@ -394,7 +394,7 @@ public struct ASDKTableView<SectionID: Hashable>: UIViewControllerRepresentable,
         }
         
         public func tableNode(_ tableNode: ASTableNode, constrainedSizeForRowAt indexPath: IndexPath) -> ASSizeRange {
-            return ASSizeRange(min: .zero, max: tableNode.view.bounds.size)
+            return ASSizeRange(min: .zero, max: CGSize(width: tableNode.view.bounds.width, height: CGFloat.infinity))
         }
         
         public func tableNode(_ tableNode: ASTableNode, didEndDisplayingRowWith node: ASCellNode) {
